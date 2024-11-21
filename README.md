@@ -12,6 +12,6 @@
      
  -task : we can add our todos there and also delete them
 
- -to run the text using jest:
+ -to run the test using jest:
        
        npm test
