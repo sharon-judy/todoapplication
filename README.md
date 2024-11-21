@@ -11,3 +11,7 @@
   browser:localhost:3000
      
  -task : we can add our todos there and also delete them
+
+ -to run test using jest:
+       
+       npm test
