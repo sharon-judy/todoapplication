@@ -2,7 +2,7 @@
 
  nodejs version: v20.18.0
 
- -to run
+ -to run todoapplication
      terminal:
      
      node app.js/nodemon app
@@ -12,6 +12,6 @@
      
  -task : we can add our todos there and also delete them
 
- -to run test using jest:
+ -to run the text using jest:
        
        npm test
