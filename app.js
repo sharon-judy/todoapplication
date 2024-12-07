@@ -13,7 +13,8 @@ mongoose.connect("mongodb://127.0.0.1:27017/todo_express")
 
 //middlewares
 
-app.use(express.urlencoded({ extended: true}));
+app.use(express.json()); // For parsing application/json
+app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
 app.use(express.static("public"));
 
@@ -35,3 +36,4 @@ app.listen(PORT, () => {
 
 
 
+module.exports = app;
