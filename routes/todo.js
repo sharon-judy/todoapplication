@@ -5,7 +5,7 @@ const Todo = require("../models/Todo");
 //routes
 
 router.post("/add/todo", (req, res) => {
-    const { todo } = req.body; // Corrected this line
+    const { todo } = req.body; 
   
     const newTodo = new Todo({ todo });
   
@@ -16,7 +16,10 @@ router.post("/add/todo", (req, res) => {
         console.log("Successfully added todo!!");
         res.redirect("/");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error('Error while adding todo:', err);  // Add error logging here
+        res.status(500).send('Error adding todo');
+      })
   })
   
 

@@ -2,25 +2,27 @@ const request = require("supertest");
 const express = require("express");
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
-const Todo = require("../models/Todo"); // Import your Todo model
-const todoRouter = require("../routes/todo"); // Import your router
+const Todo = require("../models/Todo");
+const todoRouter = require("../routes/todo"); 
 
 const app = express();
-app.use(express.urlencoded({ extended: false })); // Parse form data
-app.use(express.json()); // Parse JSON data
-app.use("/", todoRouter); // Mount the router
+app.use(express.urlencoded({ extended: false })); 
+app.use(express.json()); 
+app.use("/", todoRouter);
 
 let mongoServer;
 
 beforeAll(async () => {
-  // Start in-memory MongoDB
+  // Start MongoDB in-memory server
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
+
   await mongoose.connect(uri);
+
 });
 
 afterAll(async () => {
-  // Stop in-memory MongoDB
+  // Close connections
   await mongoose.disconnect();
   await mongoServer.stop();
 });
@@ -30,37 +32,28 @@ afterEach(async () => {
   await Todo.deleteMany({});
 });
 
-
-
-
-describe("Todo Router", () => {
-  beforeAll(() => {
-    jest.spyOn(console, "log").mockImplementation(() => {}); // Suppress console logs
-  });
-  // Test the POST /add/todo route
+describe("Todo Routes", () => {
   test("POST /add/todo - should add a new todo", async () => {
     const response = await request(app)
       .post("/add/todo")
       .send({ todo: "Test Todo" });
 
-    // Assertions
-    expect(response.statusCode).toBe(302); // Expect redirect to "/"
+    expect(response.statusCode).toBe(302);
     const todos = await Todo.find();
-    expect(todos.length).toBe(1); // Ensure one todo is saved
-    expect(todos[0].todo).toBe("Test Todo"); // Ensure the correct todo content
+    expect(todos.length).toBe(1);
+    expect(todos[0].todo).toBe("Test Todo");
+    
   });
 
-  // Test the GET /delete/todo/:_id route
   test("GET /delete/todo/:_id - should delete a todo", async () => {
-    // Add a todo to the database
+   
     const todo = new Todo({ todo: "Todo to delete" });
     await todo.save();
 
     const response = await request(app).get(`/delete/todo/${todo._id}`);
 
-    // Assertions
-    expect(response.statusCode).toBe(302); // Expect redirect to "/"
+    expect(response.statusCode).toBe(302); 
     const todos = await Todo.find();
-    expect(todos.length).toBe(0); // Ensure the todo is deleted
+    expect(todos.length).toBe(0); // Should be empty after deletion
   });
 });
